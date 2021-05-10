@@ -22,8 +22,21 @@ public:
         this->name = ref.name;
         this->age = ref.age;
         ref.name = nullptr;
-        std::cout  << "move constructor" << std::endl;
+        std::cout  << "move constructor [&&]" << std::endl;
     };
+    OO(OO& ref) {
+        this->name = ref.name;
+        this->age = ref.age;
+        ref.name = nullptr;
+        std::cout  << "move constructor [&]" << std::endl;
+    };
+    OO(OO* ref) {
+        this->name = ref->name;
+        this->age = ref->age;
+        ref->name = nullptr;
+        std::cout  << "move constructor [*]" << std::endl;
+    };
+
     ~OO() {
         if (this->name != nullptr) {
             std::cout << "destructor called by end and now delete : " << "[" << this->name << "]" << '\n';
@@ -49,8 +62,12 @@ private:
 int main() {
     std::cout << "■■■■■■■■■■■■■■■■■■Hello, World! and learn bout pointer copies or refs mechanism!!" << std::endl;
 
-    OO a("hello",12);
-    OO b(static_cast<OO&&>(a));
+
+    //지랄입니다
+    OO a("hello",12);   // 1. 생성자에 의한 heap area 에 메모리 생성
+    OO b(static_cast<OO&&>(a));    // 2. r-value 참조자의 정의된에 생성자 의한  복사
+    OO c(b);                       // 3. 정의된 기본 생성자에 의한 복사
+    OO d(&c);                      // 4. 일반 참조자에 의한 정의된 생성자 복사
 
     std::cout << "■■■■■■■■■■■■■■■■■■program is over" << '\n';
     return 0;
